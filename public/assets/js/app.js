@@ -31,6 +31,7 @@ window.addEventListener('resize', function(){
 
 function responsiveSidePanel() {
     let w = window.innerWidth;
+    sidePanelToggler.setAttribute('aria-expanded', String(w >= 1200));
 	if(w >= 1200) {
 	    // if larger 
 	    //console.log('larger');
@@ -56,6 +57,7 @@ sidePanelToggler.addEventListener('click', () => {
 		sidePanel.classList.remove('sidepanel-hidden');
 		sidePanel.classList.add('sidepanel-visible');
 	}
+	sidePanelToggler.setAttribute('aria-expanded', String(sidePanel.classList.contains('sidepanel-visible')));
 });
 
 

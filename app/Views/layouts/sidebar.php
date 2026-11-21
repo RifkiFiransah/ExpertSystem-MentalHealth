@@ -1,9 +1,9 @@
 <div id="app-sidepanel" class="app-sidepanel">
   <div id="sidepanel-drop" class="sidepanel-drop"></div>
   <div class="sidepanel-inner d-flex flex-column">
-    <a href="#" id="sidepanel-close" class="sidepanel-close d-xl-none">&times;</a>
+    <button type="button" id="sidepanel-close" class="sidepanel-close d-xl-none" aria-label="Tutup menu navigasi">&times;</button>
     <div class="app-branding">
-      <a class="app-logo" href="/Dashboard"><img class="logo-icon me-2" src="<?= base_url('assets/images/logo/logo-2.jpg'); ?>" alt="logo"><span class="logo-text">MentalCare</span></a>
+      <a class="app-logo" href="/Dashboard"><span class="logo-text">MentalCare</span></a>
 
     </div><!--//app-branding-->
 

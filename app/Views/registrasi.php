@@ -1,105 +1,93 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <title>Portal - Bootstrap 5 Admin Dashboard Template For Developers</title>
-
-  <!-- Meta -->
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <meta name="description" content="Portal - Bootstrap 5 Admin Dashboard Template For Developers">
-  <meta name="author" content="Xiaoying Riley at 3rd Wave Media">
-  <link rel="shortcut icon" href="<?= base_url('favicon.ico'); ?>">
-
-  <!-- FontAwesome JS-->
-  <script defer src="<?= base_url('assets/plugins/fontawesome/js/all.min.js'); ?>"></script>
-
-  <!-- App CSS -->
-  <link id="theme-style" rel="stylesheet" href="<?= base_url('assets/css/portal.css'); ?>">
-
-</head>
-
-<body class="app app-login p-0">
-  <div class="row g-0 app-auth-wrapper">
-    <div class="col-12 auth-main-col text-center p-5">
-      <div class="d-flex flex-column align-content-end">
-        <div class="app-auth-body mx-auto">
-          <div class="app-auth-branding mb-4"><a class="app-logo" href="index.html"><img class="logo-icon me-2" src="<?= base_url('assets/images/logo/logo-2.jpg'); ?>" alt="logo"></a></div>
-          <h2 class="auth-heading text-center mb-4">Registrasi To MentalCare</h2>
-
-          <div class="auth-form-container text-start mx-auto">
-            <form class="auth-form auth-signup-form" method="POST" action="/Registrasi">
-              <?= csrf_field(); ?>
-              <div class="mb-3">
-                <label class="sr-only" for="nama_lengkap">Nama Lengkap</label>
-                <input id="nama_lengkap" name="nama_lengkap" type="text" class="form-control <?= $validation->hasError('nama_lengkap') ?? 'is_invalid'; ?> signup-name" placeholder="Full name" required="required">
-                <div class="invalid-feedback">
-                  <?= $validation->getError('nama_lengkap'); ?>
-                </div>
-              </div>
-              <div class="mb-3">
-                <label class="sr-only" for="user_email">Email Anda</label>
-                <input id="user_email" name="user_email" type="email" class="form-control <?= $validation->hasError('user_email') ?? 'is_invalid'; ?> signup-email" placeholder="Email" required="required">
-                <div class="invalid-feedback">
-                  <?= $validation->getError('user_email'); ?>
-                </div>
-              </div>
-              <div class="password mb-3">
-                <label class="sr-only" for="password">Password</label>
-                <input id="password" name="password" type="password" class="form-control <?= $validation->hasError('password') ?? 'is_invalid'; ?> signup-password" placeholder="Create a password" required="required">
-                <div class="invalid-feedback">
-                  <?= $validation->getError('password'); ?>
-                </div>
-              </div>
-              <div class="mb-3">
-                <label class="sr-only" for="no_telp">Telp Anda</label>
-                <input id="no_telp" name="no_telp" type="number" class="form-control <?= $validation->hasError('no_telp') ?? 'is_invalid'; ?> signup-email" placeholder="No Telp" required="required">
-                <div class="invalid-feedback">
-                  <?= $validation->getError('no_telp'); ?>
-                </div>
-              </div>
-              <div class="mb-3">
-                <label class="sr-only" for="alamat">Alamat Anda</label>
-                <textarea id="alamat" name="alamat" style="height: 100px;" class="form-control <?= $validation->hasError('alamat') ?? 'is_invalid'; ?> signup-email" placeholder="Alamat Anda" required="required"></textarea>
-                <div class="invalid-feedback">
-                  <?= $validation->getError('alamat'); ?>
-                </div>
-              </div>
-              <div class="extra mb-3">
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="" id="RememberPassword">
-                  <label class="form-check-label" for="RememberPassword">
-                    I agree to Portal's <a href="#" class="app-link">Terms of Service</a> and <a href="#" class="app-link">Privacy Policy</a>.
-                  </label>
-                </div>
-              </div><!--//extra-->
-
-              <div class="text-center">
-                <button type="submit" class="btn app-btn-primary w-100 theme-btn mx-auto">Sign Up</button>
-              </div>
-            </form><!--//auth-form-->
-
-            <div class="auth-option text-center pt-5">Already have an account? <a class="text-link" href="Login">Log in</a></div>
-          </div><!--//auth-form-container-->
-
-
-
-        </div><!--//auth-body-->
-
-        <footer class="app-auth-footer">
-          <div class="container text-center py-3">
-            <!--/* This template is free as long as you keep the footer attribution link. If you'd like to use the template without the attribution link, you can buy the commercial license via our website: themes.3rdwavemedia.com Thank you for your support. :) */-->
-            <small class="copyright">Designed with <span class="sr-only">love</span><i class="fas fa-heart" style="color: #fb866a;"></i> by <a class="app-link" href="http://themes.3rdwavemedia.com" target="_blank">Xiaoying Riley</a> for developers</small>
-
-          </div>
-        </footer><!--//app-auth-footer-->
-      </div><!--//flex-column-->
+<?= $this->extend('frontend/main'); ?>
+<?= $this->section('frontend'); ?>
+<section class="bg-white">
+  <div class="mx-auto max-w-screen-xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+    <div class="mx-auto max-w-3xl">
+      <h2 class="text-2xl font-bold leading-snug text-slate-900 md:text-3xl">
+        Buat akun MentalCare
+      </h2>
+      <p class="mt-4 text-base leading-relaxed text-slate-700">
+        Akun dipakai untuk menyimpan hasil skrining dan riwayat Anda. Isi data berikut dengan informasi yang dapat dihubungi.
+      </p>
     </div>
-  </div><!--//row-->
 
+    <div class="mx-auto mt-8 max-w-3xl rounded-md border border-slate-200 bg-white p-6 sm:p-8">
+      <form method="post" action="/Registrasi" class="space-y-5">
+        <?= csrf_field(); ?>
 
-</body>
+        <div class="grid gap-5 sm:grid-cols-2">
+          <div>
+            <label for="nama_lengkap" class="block text-sm font-medium text-slate-900">Nama lengkap</label>
+            <input id="nama_lengkap" name="nama_lengkap" type="text" value="<?= old('nama_lengkap'); ?>" autocomplete="name" required class="mt-2 block min-h-11 w-full rounded-md border <?= $validation->hasError('nama_lengkap') ? 'border-[#B45309]' : 'border-slate-300'; ?> bg-white px-3 py-2 text-base text-slate-900 transition-colors hover:border-slate-400">
+            <?php if ($validation->hasError('nama_lengkap')) : ?>
+              <p class="mt-1 text-sm text-[#B45309]"><?= esc($validation->getError('nama_lengkap')); ?></p>
+            <?php endif; ?>
+          </div>
 
-</html>
+          <div>
+            <label for="user_email" class="block text-sm font-medium text-slate-900">Email</label>
+            <input id="user_email" name="user_email" type="email" value="<?= old('user_email'); ?>" autocomplete="email" required class="mt-2 block min-h-11 w-full rounded-md border <?= $validation->hasError('user_email') ? 'border-[#B45309]' : 'border-slate-300'; ?> bg-white px-3 py-2 text-base text-slate-900 transition-colors hover:border-slate-400">
+            <?php if ($validation->hasError('user_email')) : ?>
+              <p class="mt-1 text-sm text-[#B45309]"><?= esc($validation->getError('user_email')); ?></p>
+            <?php endif; ?>
+          </div>
+        </div>
+
+        <div>
+          <label for="password" class="block text-sm font-medium text-slate-900">Password</label>
+          <input id="password" name="password" type="password" autocomplete="new-password" required class="mt-2 block min-h-11 w-full rounded-md border <?= $validation->hasError('password') ? 'border-[#B45309]' : 'border-slate-300'; ?> bg-white px-3 py-2 text-base text-slate-900 transition-colors hover:border-slate-400">
+          <?php if ($validation->hasError('password')) : ?>
+            <p class="mt-1 text-sm text-[#B45309]"><?= esc($validation->getError('password')); ?></p>
+          <?php endif; ?>
+          <label class="mt-3 flex min-h-11 cursor-pointer items-center gap-3 text-sm text-slate-700">
+            <input id="tampil-password" type="checkbox" class="size-4 rounded border-slate-500">
+            Tampilkan password
+          </label>
+        </div>
+
+        <div class="grid gap-5 sm:grid-cols-2">
+          <div>
+            <label for="no_telp" class="block text-sm font-medium text-slate-900">Nomor telepon</label>
+            <input id="no_telp" name="no_telp" type="tel" value="<?= old('no_telp'); ?>" autocomplete="tel" required class="mt-2 block min-h-11 w-full rounded-md border <?= $validation->hasError('no_telp') ? 'border-[#B45309]' : 'border-slate-300'; ?> bg-white px-3 py-2 text-base text-slate-900 transition-colors hover:border-slate-400">
+            <?php if ($validation->hasError('no_telp')) : ?>
+              <p class="mt-1 text-sm text-[#B45309]"><?= esc($validation->getError('no_telp')); ?></p>
+            <?php endif; ?>
+          </div>
+
+          <div>
+            <label for="alamat" class="block text-sm font-medium text-slate-900">Alamat</label>
+            <input id="alamat" name="alamat" type="text" value="<?= old('alamat'); ?>" autocomplete="street-address" required class="mt-2 block min-h-11 w-full rounded-md border <?= $validation->hasError('alamat') ? 'border-[#B45309]' : 'border-slate-300'; ?> bg-white px-3 py-2 text-base text-slate-900 transition-colors hover:border-slate-400">
+            <?php if ($validation->hasError('alamat')) : ?>
+              <p class="mt-1 text-sm text-[#B45309]"><?= esc($validation->getError('alamat')); ?></p>
+            <?php endif; ?>
+          </div>
+        </div>
+
+        <p role="note" class="rounded-md border border-slate-200 bg-slate-50 p-4 text-sm leading-relaxed text-slate-700">
+          Data yang Anda masukkan dipakai untuk proses skrining di MentalCare. Hasil skrining bukan diagnosis medis.
+        </p>
+
+        <button type="submit" class="inline-flex min-h-11 w-full items-center justify-center rounded-md bg-teal-700 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-teal-800">
+          Buat akun
+        </button>
+      </form>
+
+      <p class="mt-6 border-t border-slate-200 pt-4 text-sm leading-relaxed text-slate-700">
+        Sudah punya akun?
+        <a href="/Login" class="font-medium text-teal-700 transition-colors hover:text-teal-800">Masuk</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<script>
+  const passwordField = document.getElementById('password');
+  const passwordToggle = document.getElementById('tampil-password');
+
+  if (passwordField && passwordToggle) {
+    passwordToggle.addEventListener('change', () => {
+      passwordField.type = passwordToggle.checked ? 'text' : 'password';
+    });
+  }
+</script>
+<?= $this->endsection(); ?>

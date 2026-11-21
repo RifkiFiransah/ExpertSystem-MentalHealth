@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
 	<title><?= $title; ?></title>
@@ -9,8 +9,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<meta name="description" content="Portal - Bootstrap 5 Admin Dashboard Template For Developers">
-	<meta name="author" content="Xiaoying Riley at 3rd Wave Media">
+	<meta name="description" content="Antarmuka admin MentalCare untuk mengelola data diagnosa, gejala, penyakit, aturan, dan pengguna.">
 	<link rel="shortcut icon" href="<?= base_url('assets/images/logo/logo-2.jpg'); ?>">
 
 	<!-- FontAwesome JS-->
@@ -23,6 +22,7 @@
 </head>
 
 <body class="app">
+	<a href="#main-content" class="skip-link">Lewati ke konten</a>
 	<!-- Header -->
 	<?= $this->include('layouts/header'); ?>
 	<!-- End Header -->
@@ -33,9 +33,10 @@
 
 	<div class="app-wrapper">
 
-		<div class="app-content pt-3 p-md-3 p-lg-4">
+		<main id="main-content" class="app-content pt-3 p-md-3 p-lg-4">
+			<h1 class="sr-only"><?= $title; ?></h1>
 			<?= $this->renderSection('content'); ?>
-		</div><!--//app-content-->
+		</main><!--//app-content-->
 
 		<!-- Footer -->
 		<?= $this->include('layouts/footer');; ?>

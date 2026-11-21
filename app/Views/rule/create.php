@@ -1,11 +1,11 @@
 <?= $this->extend('layouts/main'); ?>
 <?= $this->section('content'); ?>
 <div class="container-xl">
-  <div class="app-card app-card-chart h-100 shadow-sm">
+  <div class="app-card app-card-chart h-100">
     <div class="app-card-header p-3">
       <div class="row justify-content-between align-items-center">
         <div class="col-auto">
-          <h4 class="app-card-title fs-3 text-uppercase fw-bold">Tambah Rule <?= $kode_gejala; ?></h4>
+          <h4 class="app-card-title fs-3 fw-bold">Tambah Rule <?= $kode_gejala; ?></h4>
         </div><!--//col-->
       </div><!--//row-->
     </div><!--//app-card-header-->
@@ -32,7 +32,7 @@
         endforeach;
         ?>
         <div class="my-3">
-          <a href="/Gejala" class="text-white btn btn-secondary">Back</a>
+          <a href="/Gejala" class="text-white btn btn-secondary">Kembali ke gejala</a>
           <button type="submit" class="text-white btn btn-info">Update Data</button>
         </div>
       </form>

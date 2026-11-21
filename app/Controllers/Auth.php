@@ -17,7 +17,8 @@ class Auth extends BaseController
   public function index(): string
   {
     $data = [
-      'title' => 'Halaman Login',
+      'title' => 'Masuk | MentalCare',
+      'pageHeading' => 'Masuk ke MentalCare',
       'validation' => \Config\Services::validation()
     ];
     return view('login', $data);
@@ -68,7 +69,8 @@ class Auth extends BaseController
   public function registrasi(): string
   {
     $data = [
-      'title' => 'Halaman Registrasi',
+      'title' => 'Buat akun | MentalCare',
+      'pageHeading' => 'Buat akun MentalCare',
       'validation' => \Config\Services::validation()
     ];
     return view('registrasi', $data);
@@ -77,7 +79,7 @@ class Auth extends BaseController
   {
     $rules = [
       'nama_lengkap' => 'required|is_unique[tbl_user.nama_lengkap]|min_length[3]',
-      'user_email' => 'required|min_length[6]|valid_email|is_unique[users.user_email]',
+      'user_email' => 'required|min_length[6]|valid_email|is_unique[tbl_user.user_email]',
       'password' => 'required|min_length[5]',
       'no_telp' => 'required',
       'alamat' => 'required|min_length[5]'
@@ -88,12 +90,13 @@ class Auth extends BaseController
     $password = password_hash($this->request->getVar('password'), PASSWORD_DEFAULT);
     $this->user->save([
       'nama_lengkap' => $this->request->getVar('nama_lengkap'),
+      'username' => $this->request->getVar('user_email'),
       'user_email' => $this->request->getVar('user_email'),
       'password' => $password,
       'no_telp' => $this->request->getVar('no_telp'),
       'alamat' => $this->request->getVar('alamat'),
     ]);
-    session()->setFlashdata('message', 'Registrasi akun berhasil');
+    session()->setFlashdata('success', 'Registrasi akun berhasil. Silakan masuk dengan akun Anda.');
     return redirect()->to('/Login');
   }
   public function logout()

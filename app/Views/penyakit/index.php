@@ -1,15 +1,15 @@
 <?= $this->extend('layouts/main'); ?>
 <?= $this->section('content'); ?>
 <div class="container-xl">
-  <div class="app-card app-card-chart h-100 shadow-sm">
+  <div class="app-card app-card-chart h-100">
     <div class="app-card-header p-3">
       <div class="row justify-content-between align-items-center">
         <div class="col-auto">
-          <h4 class="app-card-title fs-3 text-uppercase fw-bold">Data Penyakit</h4>
+          <h4 class="app-card-title fs-3 fw-bold">Data Penyakit</h4>
         </div><!--//col-->
         <div class="col-auto">
           <div class="card-header-action">
-            <button type="button" class="text-white btn btn-info" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Tambah</button>
+            <button type="button" class="text-white btn btn-info" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Tambah penyakit</button>
           </div><!--//card-header-actions-->
         </div><!--//col-->
       </div><!--//row-->
@@ -24,6 +24,12 @@
       <?php
       endif;
       ?>
+      <?php if (session()->getFlashdata('error')) : ?>
+        <div class="alert alert-danger" role="alert">
+          <?= session()->getFlashdata('error'); ?>
+        </div>
+      <?php endif; ?>
+      <p id="penyakit-loading" class="text-muted small" role="status">Memuat data penyakit...</p>
       <div class="table-responsive">
         <table class="table table-striped mb-0 text-left">
           <thead>
@@ -36,25 +42,26 @@
             </tr>
           </thead>
           <tbody>
-            <?php
-            $i = 1;
-            foreach ($penyakits as $penyakit) :
-            ?>
+            <?php if (!empty($penyakits)) : ?>
+              <?php $i = 1; ?>
+              <?php foreach ($penyakits as $penyakit) : ?>
+                <tr>
+                  <td class="cell"><?= $i++; ?></td>
+                  <td class="cell"><span class="truncate"><?= $penyakit['nama_penyakit']; ?></span></td>
+                  <td class="cell"><?= substr($penyakit['informasi'], 0, 100); ?>...</td>
+                  <td class="cell"><?= substr($penyakit['solusi'], 0, 100); ?>...</td>
+                  <td class="cell inline" style="width: 250px;">
+                    <a class="text-white btn btn-sm btn-success" href="/Penyakit/<?= $penyakit['id']; ?>">View</a>
+                    <a class="text-white btn btn-sm btn-warning" href="/Penyakit/<?= $penyakit['id']; ?>/edit">Ubah penyakit</a>
+                    <a class="text-white btn btn-sm btn-danger" href="/Penyakit/<?= $penyakit['id']; ?>/delete" onclick="return confirm('Hapus penyakit ini?');">Hapus penyakit</a>
+                  </td>
+                </tr>
+              <?php endforeach; ?>
+            <?php else : ?>
               <tr>
-                <td class="cell"><?= $i++; ?></td>
-                <td class="cell"><span class="truncate"><?= $penyakit['nama_penyakit']; ?></span></td>
-                <td class="cell"><?= substr($penyakit['informasi'], 0, 100); ?>......</td>
-                <td class="cell"><?= substr($penyakit['informasi'], 0, 100); ?>......</td>
-                <!-- <td class="cell"><span class="cell-data">12 Oct</span><span class="note">04:23 PM</span></td> -->
-                <td class="cell inline" style="width: 250px;">
-                  <a class="text-white btn btn-sm btn-success" href="Penyakit/<?= $penyakit['id']; ?>">View</a>
-                  <a class="text-white btn btn-sm btn-warning" href="Penyakit/<?= $penyakit['id']; ?>/edit">Edit</a>
-                  <a onclick="" class="text-white btn btn-sm btn-danger" href="Penyakit/<?= $penyakit['id']; ?>/delete">Delete</a>
-                </td>
+                <td class="cell text-center" colspan="5">Belum ada data penyakit.</td>
               </tr>
-            <?php
-            endforeach;
-            ?>
+            <?php endif; ?>
           </tbody>
         </table>
       </div><!--//table-responsive-->
@@ -67,7 +74,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="staticBackdropLabel">Tambah Data Penyakit</h1>
+        <h2 class="modal-title fs-5" id="staticBackdropLabel">Tambah Data Penyakit</h2>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form action="/Penyakit" method="post">
@@ -97,10 +104,18 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="text-white btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="text-white btn btn-info">Submit</button>
+          <button type="submit" class="text-white btn btn-info">Simpan penyakit</button>
         </div>
       </form>
     </div>
   </div>
 </div>
+<script>
+  const penyakitLoading = document.getElementById('penyakit-loading');
+  if (penyakitLoading) {
+    document.addEventListener('DOMContentLoaded', () => {
+      penyakitLoading.hidden = true;
+    });
+  }
+</script>
 <?= $this->endSection(); ?>

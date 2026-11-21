@@ -26,9 +26,36 @@ class Home extends BaseController
     }
     public function index(): string
     {
+        $penyakits = [];
+        $penyakitError = false;
+
+        try {
+            $penyakits = $this->penyakits->orderBy('nama_penyakit')->findAll();
+        } catch (\Throwable $exception) {
+            $penyakitError = true;
+            log_message('error', 'Gagal memuat daftar kondisi untuk beranda: ' . $exception->getMessage());
+        }
+
+        $names = [];
+        $ringkasan = [];
+
+        foreach ($penyakits as $penyakit) {
+            $nama = trim((string) $penyakit['nama_penyakit']);
+
+            if (mb_strlen($nama) < 3 || isset($names[$nama])) {
+                continue;
+            }
+
+            $names[$nama] = true;
+            $ringkasan[] = ['nama_penyakit' => $nama];
+        }
+
         return view('beranda', [
-            'title' => 'Halaman Beranda',
+            'title' => 'Beranda | MentalCare',
+            'pageHeading' => 'Skrining kemungkinan gangguan kesehatan mental',
             'path' => $this->request->getPath(),
+            'penyakitError' => $penyakitError,
+            'penyakits' => $ringkasan,
         ]);
     }
     public function profile()
@@ -63,10 +90,36 @@ class Home extends BaseController
     }
     public function penyakit(): string
     {
+        $penyakits = [];
+        $penyakitError = false;
+
+        try {
+            $penyakits = $this->penyakits->orderBy('nama_penyakit')->findAll();
+        } catch (\Throwable $exception) {
+            $penyakitError = true;
+            log_message('error', 'Gagal memuat daftar kondisi: ' . $exception->getMessage());
+        }
+
+        $names = [];
+        $ringkasan = [];
+
+        foreach ($penyakits as $penyakit) {
+            $nama = trim((string) $penyakit['nama_penyakit']);
+
+            if (mb_strlen($nama) < 3 || isset($names[$nama])) {
+                continue;
+            }
+
+            $names[$nama] = true;
+            $ringkasan[] = $penyakit;
+        }
+
         return view('penyakit', [
-            'title' => 'Halaman Data Penyakit',
+            'title' => 'Data kondisi | MentalCare',
+            'pageHeading' => 'Daftar kondisi kesehatan mental',
             'path' => $this->request->getPath(),
-            'penyakits' => $this->penyakits->orderBy('nama_penyakit')->findAll()
+            'penyakitError' => $penyakitError,
+            'penyakits' => $ringkasan
         ]);
     }
     public function diagnosa(): string

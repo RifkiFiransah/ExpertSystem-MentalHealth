@@ -1,7 +1,7 @@
 <?= $this->extend('layouts/main'); ?>
 <?= $this->section('content'); ?>
 <div class="container-xl">
-  <div class="app-card app-card-chart h-100 shadow-sm">
+  <div class="app-card app-card-chart h-100">
     <div class="app-card-header p-3">
       <div class="row justify-content-between align-items-center">
         <div class="col-auto">
@@ -9,7 +9,7 @@
         </div><!--//col-->
         <div class="col-auto">
           <div class="card-header-action">
-            <button type="button" class="text-white btn btn-info" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Tambah</button>
+            <button type="button" class="text-white btn btn-info" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Tambah aturan</button>
           </div><!--//card-header-actions-->
         </div><!--//col-->
       </div><!--//row-->
@@ -24,6 +24,12 @@
       <?php
       endif;
       ?>
+      <?php if (session()->getFlashdata('error')) : ?>
+        <div class="alert alert-danger" role="alert">
+          <?= session()->getFlashdata('error'); ?>
+        </div>
+      <?php endif; ?>
+      <p id="rule-loading" class="text-muted small" role="status">Memuat aturan diagnosa...</p>
       <div class="table-responsive">
         <table class="table table-striped mb-0 text-left">
           <thead>
@@ -40,36 +46,21 @@
             </tr>
           </thead>
           <tbody>
-            <?php
-            $i = 1;
-            foreach ($rules as $rule) :
-            ?>
+            <?php if (!empty($rules)) : ?>
+              <?php $i = 1; ?>
+              <?php foreach ($rules as $rule) : ?>
+                <tr>
+                  <td class="cell"><?= $i++; ?></td>
+                  <?php for ($j = 1; $j <= count($columns); $j++) : ?>
+                    <td class="cell"><span class="truncate"><?= $rule[$j < 10 ? "G00$j" : "G0$j"]; ?></span></td>
+                  <?php endfor; ?>
+                </tr>
+              <?php endforeach; ?>
+            <?php else : ?>
               <tr>
-                <td class="cell"><?= $i++; ?></td>
-                <?php
-                for ($j = 1; $j <= count($columns); $j++) :
-                ?>
-                  <?php
-                  if ($j < 10) {
-                  ?>
-                    <td class="cell"><span class="truncate"><?= $rule["G00$j"] ?></span></td>
-                  <?php
-                  } else if ($j >= 10) {
-                  ?>
-                    <td class="cell"><span class="truncate"><?= $rule["G0$j"] ?></span></td>
-                <?php
-                  }
-                endfor;
-                ?>
-                <!-- <td class="cell inline" style="width: 550px;">
-                  <a class="text-white btn btn-sm btn-success" href="#">View</a>
-                  <a class="text-white btn btn-sm btn-warning" href="#">Edit</a>
-                  <a class="text-white btn btn-sm btn-danger" href="#">Delete</a>
-                </td> -->
+                <td class="cell text-center" colspan="<?= count($columns) + 1; ?>">Belum ada aturan diagnosa.</td>
               </tr>
-            <?php
-            endforeach;
-            ?>
+            <?php endif; ?>
           </tbody>
         </table>
       </div><!--//table-responsive-->
@@ -81,7 +72,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="staticBackdropLabel">Tambah Rule Penyakit <?= $penyakit['nama_penyakit']; ?></h1>
+        <h2 class="modal-title fs-5" id="staticBackdropLabel">Tambah Rule Penyakit <?= $penyakit['nama_penyakit'] ?? ''; ?></h2>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form action="/Rule/store" method="post">
@@ -105,10 +96,18 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="text-white btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="text-white btn btn-info">Submit</button>
+          <button type="submit" class="text-white btn btn-info">Simpan aturan</button>
         </div>
       </form>
     </div>
   </div>
 </div>
+<script>
+  const ruleLoading = document.getElementById('rule-loading');
+  if (ruleLoading) {
+    document.addEventListener('DOMContentLoaded', () => {
+      ruleLoading.hidden = true;
+    });
+  }
+</script>
 <?= $this->endSection(); ?>
