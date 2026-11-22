@@ -1,45 +1,48 @@
 <?= $this->extend('layouts/main'); ?>
 <?= $this->section('content'); ?>
 <div class="container-xl">
-  <div class="app-card app-card-chart h-100">
-    <div class="app-card-header p-3">
-      <div class="row justify-content-between align-items-center">
-        <div class="col-auto">
-          <h4 class="app-card-title fs-3 fw-bold">Data Edit Penyakit</h4>
-        </div><!--//col-->
-      </div><!--//row-->
-    </div><!--//app-card-header-->
+  <div class="admin-page-head">
+    <div>
+      <h2 class="app-page-title">Ubah penyakit</h2>
+      <p class="admin-page-desc">Perbarui informasi dan solusi penyakit. Perubahan dipakai pada proses diagnosa berikutnya.</p>
+    </div>
+  </div>
+
+  <div class="app-card admin-card">
+    <div class="app-card-header admin-card-header">
+      <h3 class="admin-card-title"><?= esc($penyakit['nama_penyakit']); ?></h3>
+    </div>
     <div class="app-card-body p-3 p-lg-4">
       <form action="/Penyakit/<?= $penyakit['id']; ?>/edit" method="post">
         <?= csrf_field(); ?>
         <input type="hidden" name="id" value="<?= $penyakit['id']; ?>">
         <div class="mb-3">
-          <label for="nama_penyakit" class="form-label">Nama Penyakit</label>
-          <input type="text" class="form-control <?= $validation->hasError('nama_penyakit') ?? 'is-invalid'; ?>" required autocomplete="FALSE" name="nama_penyakit" id="nama_penyakit" value="<?= old('nama_penyakit') ?? $penyakit['nama_penyakit']; ?>">
+          <label for="nama_penyakit" class="form-label">Nama penyakit</label>
+          <input type="text" class="form-control <?= $validation->hasError('nama_penyakit') ? 'is-invalid' : ''; ?>" required autocomplete="off" name="nama_penyakit" id="nama_penyakit" value="<?= esc(old('nama_penyakit') ?? $penyakit['nama_penyakit']); ?>">
           <div class="invalid-feedback">
             <?= $validation->getError('nama_penyakit'); ?>
           </div>
         </div>
         <div class="mb-3">
-          <label for="informasi" class="form-label">Informasi Penyakit</label>
-          <textarea style="height: 100px" rows="30" class="form-control <?= $validation->hasError('informasi') ?? 'is-invalid'; ?>" required autocomplete="FALSE" name="informasi" id="informasi"><?= old('informasi') ?? $penyakit['informasi'];; ?></textarea>
+          <label for="informasi" class="form-label">Informasi penyakit</label>
+          <textarea rows="6" class="form-control <?= $validation->hasError('informasi') ? 'is-invalid' : ''; ?>" required autocomplete="off" name="informasi" id="informasi"><?= esc(old('informasi') ?? $penyakit['informasi']); ?></textarea>
           <div class="invalid-feedback">
             <?= $validation->getError('informasi'); ?>
           </div>
         </div>
         <div class="mb-3">
-          <label for="solusi" class="form-label">Solusi Penyakit</label>
-          <textarea style="height: 100px" rows="10" class="form-control <?= $validation->hasError('solusi') ?? 'is-invalid'; ?>" required autocomplete="FALSE" name="solusi" id="solusi"><?= old('solusi') ?? $penyakit['solusi'];; ?></textarea>
+          <label for="solusi" class="form-label">Solusi penyakit</label>
+          <textarea rows="6" class="form-control <?= $validation->hasError('solusi') ? 'is-invalid' : ''; ?>" required autocomplete="off" name="solusi" id="solusi"><?= esc(old('solusi') ?? $penyakit['solusi']); ?></textarea>
           <div class="invalid-feedback">
             <?= $validation->getError('solusi'); ?>
           </div>
         </div>
-        <div class="my-3">
-          <a href="/Penyakit" class="text-white btn btn-secondary">Kembali ke penyakit</a>
-          <button type="submit" class="text-white btn btn-info">Update Data</button>
+        <div class="admin-form-actions">
+          <button type="submit" class="btn app-btn-primary">Simpan perubahan</button>
+          <a href="/Penyakit" class="btn app-btn-secondary">Kembali ke data penyakit</a>
         </div>
       </form>
-    </div><!--//app-card-body-->
-  </div><!--//app-card-->
+    </div>
+  </div>
 </div>
-<?= $this->endsection(); ?>
+<?= $this->endSection(); ?>

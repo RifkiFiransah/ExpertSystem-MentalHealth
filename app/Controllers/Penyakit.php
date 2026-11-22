@@ -61,7 +61,7 @@ class Penyakit extends BaseController
     {
         $data = [
             'title' => 'Detail Penyakit',
-            'penyakits' => $this->penyakits->where(['id' => $id]),
+            'penyakit' => $this->penyakits->where(['id' => $id])->first(),
             'path' => $this->request->getPath(),
         ];
         return view('penyakit/show', $data);
@@ -117,7 +117,7 @@ class Penyakit extends BaseController
             return redirect()->to('/Penyakit')->withInput();
         }
         $this->penyakits->delete($id);
-        $this->db->query("DELETE FROM tb_rule WHERE id=$id");
+        $this->db->query("DELETE FROM tbl_rule WHERE id=$id");
         session()->setFlashdata('message', 'Data berhasil dihapus');
         return redirect()->to('/Penyakit');
     }

@@ -18,6 +18,7 @@
 
 	<!-- App CSS -->
 	<link id="theme-style" rel="stylesheet" href="<?= base_url('assets/css/portal.css'); ?>">
+	<link rel="stylesheet" href="<?= base_url('assets/css/admin.css'); ?>">
 
 </head>
 
@@ -34,7 +35,7 @@
 	<div class="app-wrapper">
 
 		<main id="main-content" class="app-content pt-3 p-md-3 p-lg-4">
-			<h1 class="sr-only"><?= $title; ?></h1>
+			<h1 class="visually-hidden"><?= $title; ?></h1>
 			<?= $this->renderSection('content'); ?>
 		</main><!--//app-content-->
 
@@ -48,10 +49,6 @@
 	<!-- Javascript -->
 	<script src="<?= base_url('assets/plugins/popper.min.js'); ?>"></script>
 	<script src="<?= base_url('assets/plugins/bootstrap/js/bootstrap.min.js'); ?>"></script>
-
-	<!-- Charts JS -->
-	<script src="<?= base_url('assets/plugins/chart.js/chart.min.js'); ?>"></script>
-	<script src="<?= base_url('assets/js/index-charts.js'); ?>"></script>
 
 	<!-- Page Specific JS -->
 	<script src="<?= base_url('assets/js/app.js'); ?>"></script>

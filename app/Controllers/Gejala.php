@@ -19,10 +19,6 @@ class Gejala extends BaseController
     }
     public function index(): string
     {
-        $penyakit = $this->db->query('SELECT * FROM tbl_penyakit')->getResultObject();
-        foreach ($penyakit as $p) {
-            echo "<br>";
-        }
         $data = [
             'title' => 'Data Gejala',
             'gejalas' => $this->gejalas->paginate(5, 'gejala'),

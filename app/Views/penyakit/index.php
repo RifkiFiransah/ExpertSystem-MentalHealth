@@ -1,44 +1,39 @@
 <?= $this->extend('layouts/main'); ?>
 <?= $this->section('content'); ?>
 <div class="container-xl">
-  <div class="app-card app-card-chart h-100">
-    <div class="app-card-header p-3">
-      <div class="row justify-content-between align-items-center">
-        <div class="col-auto">
-          <h4 class="app-card-title fs-3 fw-bold">Data Penyakit</h4>
-        </div><!--//col-->
-        <div class="col-auto">
-          <div class="card-header-action">
-            <button type="button" class="text-white btn btn-info" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Tambah penyakit</button>
-          </div><!--//card-header-actions-->
-        </div><!--//col-->
-      </div><!--//row-->
-    </div><!--//app-card-header-->
-    <div class="app-card-body p-3 p-lg-4">
-      <?php
-      if (session()->getFlashdata('message')) :
-      ?>
-        <div class="alert alert-primary" role="alert">
-          <?= session()->getFlashdata('message'); ?>
-        </div>
-      <?php
-      endif;
-      ?>
-      <?php if (session()->getFlashdata('error')) : ?>
-        <div class="alert alert-danger" role="alert">
-          <?= session()->getFlashdata('error'); ?>
-        </div>
-      <?php endif; ?>
-      <p id="penyakit-loading" class="text-muted small" role="status">Memuat data penyakit...</p>
+  <div class="admin-page-head">
+    <div>
+      <h2 class="app-page-title"><?= esc($title); ?></h2>
+      <p class="admin-page-desc">Kelola daftar penyakit beserta informasi dan solusinya. Data ini dipakai saat sistem mencocokkan gejala.</p>
+    </div>
+    <div class="admin-page-actions">
+      <button type="button" class="btn app-btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Tambah penyakit</button>
+    </div>
+  </div>
+
+  <?php if (session()->getFlashdata('message')) : ?>
+    <div class="admin-flash admin-flash-success" role="status"><?= esc(session()->getFlashdata('message')); ?></div>
+  <?php endif; ?>
+  <?php if (session()->getFlashdata('error')) : ?>
+    <div class="admin-flash admin-flash-error" role="alert"><?= esc(session()->getFlashdata('error')); ?></div>
+  <?php endif; ?>
+
+  <div class="app-card admin-card">
+    <div class="app-card-header admin-card-header">
+      <h3 class="admin-card-title">Daftar penyakit</h3>
+      <span class="admin-card-meta"><?= count($penyakits); ?> data</span>
+    </div>
+    <div class="app-card-body p-0">
+      <p id="penyakit-loading" class="admin-status px-3 pt-3" role="status">Memuat data penyakit...</p>
       <div class="table-responsive">
-        <table class="table table-striped mb-0 text-left">
+        <table class="table admin-table">
           <thead>
             <tr>
-              <th class="cell">No</th>
-              <th class="cell">Nama Penyakit</th>
-              <th class="cell">Informasi</th>
-              <th class="cell">Solusi</th>
-              <th class="cell">Action</th>
+              <th scope="col" class="cell-no">No</th>
+              <th scope="col">Nama penyakit</th>
+              <th scope="col">Informasi</th>
+              <th scope="col">Solusi</th>
+              <th scope="col" class="cell-actions">Aksi</th>
             </tr>
           </thead>
           <tbody>
@@ -46,65 +41,73 @@
               <?php $i = 1; ?>
               <?php foreach ($penyakits as $penyakit) : ?>
                 <tr>
-                  <td class="cell"><?= $i++; ?></td>
-                  <td class="cell"><span class="truncate"><?= $penyakit['nama_penyakit']; ?></span></td>
-                  <td class="cell"><?= substr($penyakit['informasi'], 0, 100); ?>...</td>
-                  <td class="cell"><?= substr($penyakit['solusi'], 0, 100); ?>...</td>
-                  <td class="cell inline" style="width: 250px;">
-                    <a class="text-white btn btn-sm btn-success" href="/Penyakit/<?= $penyakit['id']; ?>">View</a>
-                    <a class="text-white btn btn-sm btn-warning" href="/Penyakit/<?= $penyakit['id']; ?>/edit">Ubah penyakit</a>
-                    <a class="text-white btn btn-sm btn-danger" href="/Penyakit/<?= $penyakit['id']; ?>/delete" onclick="return confirm('Hapus penyakit ini?');">Hapus penyakit</a>
+                  <td class="cell-no"><?= $i++; ?></td>
+                  <td><?= esc($penyakit['nama_penyakit']); ?></td>
+                  <td class="cell-muted">
+                    <span class="cell-clamp"><?= esc(strip_tags((string) $penyakit['informasi'])); ?></span>
+                  </td>
+                  <td class="cell-muted">
+                    <span class="cell-clamp"><?= esc(strip_tags((string) $penyakit['solusi'])); ?></span>
+                  </td>
+                  <td class="cell-actions">
+                    <div class="admin-actions">
+                      <a class="btn admin-btn-accent" href="/Penyakit/<?= $penyakit['id']; ?>" aria-label="Lihat detail penyakit <?= esc($penyakit['nama_penyakit']); ?>">Lihat</a>
+                      <a class="btn admin-btn-outline" href="/Penyakit/<?= $penyakit['id']; ?>/edit" aria-label="Ubah penyakit <?= esc($penyakit['nama_penyakit']); ?>">Ubah</a>
+                      <form action="/Penyakit/<?= $penyakit['id']; ?>/delete" method="post" onsubmit="return confirm('Hapus penyakit ini?');">
+                        <?= csrf_field(); ?>
+                        <button type="submit" class="btn admin-btn-danger" aria-label="Hapus penyakit <?= esc($penyakit['nama_penyakit']); ?>">Hapus</button>
+                      </form>
+                    </div>
                   </td>
                 </tr>
               <?php endforeach; ?>
             <?php else : ?>
               <tr>
-                <td class="cell text-center" colspan="5">Belum ada data penyakit.</td>
+                <td class="admin-empty" colspan="5">Belum ada data penyakit.</td>
               </tr>
             <?php endif; ?>
           </tbody>
         </table>
-      </div><!--//table-responsive-->
-    </div><!--//app-card-body-->
-  </div><!--//app-card-->
+      </div>
+    </div>
+  </div>
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+<div class="modal fade" id="staticBackdrop" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
-        <h2 class="modal-title fs-5" id="staticBackdropLabel">Tambah Data Penyakit</h2>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h2 class="modal-title fs-5" id="staticBackdropLabel">Tambah data penyakit</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
       </div>
       <form action="/Penyakit" method="post">
         <?= csrf_field(); ?>
         <div class="modal-body">
           <div class="mb-3">
-            <label for="nama_penyakit" class="form-label">Nama Penyakit</label>
-            <input type="text" class="form-control <?= $validation->hasError('nama_penyakit') ?? 'is-invalid'; ?>" required autocomplete="FALSE" name="nama_penyakit" id="nama_penyakit" value="<?= old('nama_penyakit'); ?>">
+            <label for="nama_penyakit" class="form-label">Nama penyakit</label>
+            <input type="text" class="form-control <?= $validation->hasError('nama_penyakit') ? 'is-invalid' : ''; ?>" required autocomplete="off" name="nama_penyakit" id="nama_penyakit" value="<?= old('nama_penyakit'); ?>">
             <div class="invalid-feedback">
               <?= $validation->getError('nama_penyakit'); ?>
             </div>
           </div>
           <div class="mb-3">
-            <label for="informasi" class="form-label">Informasi Penyakit</label>
-            <textarea style="height: 100px;" class="form-control <?= $validation->hasError('informasi') ?? 'is-invalid'; ?>" required autocomplete="FALSE" name="informasi" id="informasi"><?= old('informasi'); ?></textarea>
+            <label for="informasi" class="form-label">Informasi penyakit</label>
+            <textarea rows="4" class="form-control <?= $validation->hasError('informasi') ? 'is-invalid' : ''; ?>" required autocomplete="off" name="informasi" id="informasi"><?= old('informasi'); ?></textarea>
             <div class="invalid-feedback">
               <?= $validation->getError('informasi'); ?>
             </div>
           </div>
           <div class="mb-3">
-            <label for="solusi" class="form-label">Solusi Penyakit</label>
-            <textarea style="height: 100px;" class="form-control <?= $validation->hasError('solusi') ?? 'is-invalid'; ?>" required autocomplete="FALSE" name="solusi" id="solusi"><?= old('solusi'); ?></textarea>
+            <label for="solusi" class="form-label">Solusi penyakit</label>
+            <textarea rows="4" class="form-control <?= $validation->hasError('solusi') ? 'is-invalid' : ''; ?>" required autocomplete="off" name="solusi" id="solusi"><?= old('solusi'); ?></textarea>
             <div class="invalid-feedback">
               <?= $validation->getError('solusi'); ?>
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="text-white btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="text-white btn btn-info">Simpan penyakit</button>
+          <button type="button" class="btn app-btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="submit" class="btn app-btn-primary">Simpan penyakit</button>
         </div>
       </form>
     </div>

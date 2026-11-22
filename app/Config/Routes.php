@@ -28,13 +28,13 @@ $routes->get('/Penyakit/(:num)', 'Penyakit::show/$1', ['filter' => 'auth']);
 $routes->post('/Penyakit', 'Penyakit::store', ['filter' => 'auth']);
 $routes->get('/Penyakit/(:num)/edit', 'Penyakit::edit/$1', ['filter' => 'auth']);
 $routes->post('/Penyakit/(:num)/edit', 'Penyakit::update/$1', ['filter' => 'auth']);
-$routes->get('/Penyakit/(:num)/delete', 'Penyakit::delete/$1', ['filter' => 'auth']);
+$routes->post('/Penyakit/(:num)/delete', 'Penyakit::delete/$1', ['filter' => 'auth']);
 
 $routes->get('/Gejala', 'Gejala::index', ['filter' => 'auth']);
 $routes->post('/Gejala', 'Gejala::store', ['filter' => 'auth']);
 $routes->get('/Gejala/(:num)/edit', 'Gejala::edit/$1', ['filter' => 'auth']);
 $routes->post('/Gejala/(:num)/edit', 'Gejala::update/$1', ['filter' => 'auth']);
-$routes->get('/Gejala/(:num)/delete', 'Gejala::delete/$1', ['filter' => 'auth']);
+$routes->post('/Gejala/(:num)/delete', 'Gejala::delete/$1', ['filter' => 'auth']);
 
 $routes->get('/Rule', 'Rule::index', ['filter' => 'auth']);
 $routes->post('/Rule/update', 'Rule::update', ['filter' => 'auth']);

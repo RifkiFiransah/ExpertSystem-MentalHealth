@@ -17,7 +17,7 @@
             </span>
             <span class="nav-link-text">Dashboard</span>
           </a><!--//nav-link-->
-          <a class="nav-link <?= ($path == 'Penyakit' ? 'active' : ''); ?>" href="/Penyakit">
+          <a class="nav-link <?= (str_starts_with((string) $path, 'Penyakit') ? 'active' : ''); ?>" href="/Penyakit">
             <span class="nav-icon">
               <i style="height: 1.5em; width: 1.5em;" class="fa fa-hospital"></i>
             </span>
@@ -26,13 +26,13 @@
         </li><!--//nav-item-->
         <li class="nav-item">
           <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
-          <a class="nav-link <?= ($path == 'Gejala' ? 'active' : ''); ?>" href="/Gejala">
+          <a class="nav-link <?= (str_starts_with((string) $path, 'Gejala') ? 'active' : ''); ?>" href="/Gejala">
             <span class="nav-icon">
               <i style="height: 1.5em; width: 1.5em;" class="fa fa-kit-medical"></i>
             </span>
             <span class="nav-link-text">Data Gejala</span>
           </a><!--//nav-link-->
-          <a class="nav-link <?= ($path == 'Rule' ? 'active' : ''); ?>" href="/Rule">
+          <a class="nav-link <?= (str_starts_with((string) $path, 'Rule') ? 'active' : ''); ?>" href="/Rule">
             <span class="nav-icon">
               <i style="height: 1.5em; width: 1.5em;" class="fa fa-user-doctor"></i>
             </span>
@@ -41,13 +41,13 @@
         </li><!--//nav-item-->
         <li class="nav-item">
           <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
-          <a class="nav-link <?= ($path == 'Diagnosa' ? 'active' : ''); ?>" href="/Diagnosa">
+          <a class="nav-link <?= (str_starts_with((string) $path, 'Diagnosa') ? 'active' : ''); ?>" href="/Diagnosa">
             <span class="nav-icon">
               <i style="height: 1.5em; width: 1.5em;" class="fa fa-file-medical"></i>
             </span>
             <span class="nav-link-text">Data Diagnosa</span>
           </a>
-          <a class="nav-link <?= ($path == 'User' ? 'active' : ''); ?>" href="/User">
+          <a class="nav-link <?= (str_starts_with((string) $path, 'User') ? 'active' : ''); ?>" href="/User">
             <span class="nav-icon">
               <i style="height: 1.5em; width: 1.5em;" class="fa fa-users"></i>
             </span>

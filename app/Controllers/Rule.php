@@ -4,16 +4,19 @@ namespace App\Controllers;
 
 use App\Models\RuleModel;
 use App\Models\PenyakitModel;
+use App\Models\GejalaModel;
 
 class Rule extends BaseController
 {
   protected $rules;
   protected $penyakit;
+  protected $gejala;
   protected $db;
   public function __construct()
   {
     $this->rules = new RuleModel();
     $this->penyakit = new PenyakitModel();
+    $this->gejala = new GejalaModel();
     $this->db = db_connect();
   }
 
@@ -24,7 +27,7 @@ class Rule extends BaseController
     unset($columns[1]);
     unset($columns[2]);
 
-    $kode_rules = $this->rules->findAll();
+    $kode_rules = $this->rules->orderBy('id', 'asc')->findAll();
     $rules = [];
     foreach ($kode_rules as $rule) {
       array_push($rules, $rule);
@@ -32,9 +35,9 @@ class Rule extends BaseController
 
     $data = [
       'title' => "Data Rule",
-      'columns' => $columns,
+      'columns' => array_values($columns),
       'rules' => $rules,
-      'penyakit' => $this->penyakit->orderBy('id', 'desc')->first(),
+      'gejalas' => $this->gejala->orderBy('kode_gejala', 'asc')->findAll(),
       'path' => $this->request->getPath()
     ];
 
@@ -60,7 +63,7 @@ class Rule extends BaseController
     }
     $this->rules->insert($field);
 
-    session()->setFlashdata('message', 'Data berhasil di hapus');
+    session()->setFlashdata('message', 'Data aturan berhasil disimpan');
     return redirect()->to('/Rule');
   }
 

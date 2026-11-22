@@ -48,12 +48,10 @@ function responsiveSidePanel() {
 
 sidePanelToggler.addEventListener('click', () => {
 	if (sidePanel.classList.contains('sidepanel-visible')) {
-		console.log('visible');
 		sidePanel.classList.remove('sidepanel-visible');
 		sidePanel.classList.add('sidepanel-hidden');
 		
 	} else {
-		console.log('hidden');
 		sidePanel.classList.remove('sidepanel-hidden');
 		sidePanel.classList.add('sidepanel-visible');
 	}
@@ -77,22 +75,22 @@ sidePanelDrop.addEventListener('click', (e) => {
 const searchMobileTrigger = document.querySelector('.search-mobile-trigger');
 const searchBox = document.querySelector('.app-search-box');
 
-searchMobileTrigger.addEventListener('click', () => {
+if (searchMobileTrigger && searchBox) {
+	searchMobileTrigger.addEventListener('click', () => {
 
-	searchBox.classList.toggle('is-visible');
-	
-	let searchMobileTriggerIcon = document.querySelector('.search-mobile-trigger-icon');
-	
-	if(searchMobileTriggerIcon.classList.contains('fa-magnifying-glass')) {
-		searchMobileTriggerIcon.classList.remove('fa-magnifying-glass');
-		searchMobileTriggerIcon.classList.add('fa-xmark');
-	} else {
-		searchMobileTriggerIcon.classList.remove('fa-xmark');
-		searchMobileTriggerIcon.classList.add('fa-magnifying-glass');
-	}
-	
-		
-	
-});
+		searchBox.classList.toggle('is-visible');
+
+		let searchMobileTriggerIcon = document.querySelector('.search-mobile-trigger-icon');
+
+		if(searchMobileTriggerIcon.classList.contains('fa-magnifying-glass')) {
+			searchMobileTriggerIcon.classList.remove('fa-magnifying-glass');
+			searchMobileTriggerIcon.classList.add('fa-xmark');
+		} else {
+			searchMobileTriggerIcon.classList.remove('fa-xmark');
+			searchMobileTriggerIcon.classList.add('fa-magnifying-glass');
+		}
+
+	});
+}
 
 
