@@ -151,14 +151,70 @@ class Home extends BaseController
     }
     public function dashboard(): string
     {
-        // echo view('layouts/header');
-        // echo view('layouts/sidebar');
-        // echo view('layouts/main');
-        // echo view('layouts/footer');
         $penyakits = $this->penyakits->findAll();
         $users = $this->users->findAll();
         $diagnosis = $this->diagnosis->findAll();
         $gejalas = $this->gejalas->findAll();
+
+        $chartError = false;
+        $diagnosaPenyakit = [];
+        $cakupanGejala = ['dipakai' => 0, 'total' => 0, 'jumlah_aturan' => 0, 'teratas' => []];
+
+        try {
+            $db = db_connect();
+            $diagnosaPenyakit = $db->query(
+                'SELECT COALESCE(p.nama_penyakit, ?) AS nama, COUNT(*) AS jumlah
+                 FROM tbl_diagnosa d
+                 LEFT JOIN tbl_penyakit p ON p.id = d.id_penyakit
+                 GROUP BY d.id_penyakit, p.nama_penyakit
+                 ORDER BY jumlah DESC',
+                ['Penyakit tidak diketahui']
+            )->getResultArray();
+
+            $namaGejala = [];
+            foreach ($gejalas as $gejala) {
+                $namaGejala[$gejala['kode_gejala']] = $gejala['nama_gejala'];
+            }
+
+            $kolom = $db->query('SHOW COLUMNS FROM tbl_rule')->getResultArray();
+            $fieldGejala = [];
+            foreach ($kolom as $kolomRule) {
+                if (preg_match('/^G\d{3}$/', $kolomRule['Field'])) {
+                    $fieldGejala[] = $kolomRule['Field'];
+                }
+            }
+
+            $aturan = $db->table('tbl_rule')->get()->getResultArray();
+            $teratas = [];
+            $dipakai = 0;
+            foreach ($fieldGejala as $field) {
+                $hitung = 0;
+                foreach ($aturan as $baris) {
+                    if ((int) ($baris[$field] ?? 0) === 1) {
+                        $hitung++;
+                    }
+                }
+                if ($hitung > 0) {
+                    $dipakai++;
+                }
+                $teratas[] = [
+                    'kode' => $field,
+                    'nama' => $namaGejala[$field] ?? $field,
+                    'jumlah' => $hitung,
+                ];
+            }
+            usort($teratas, static fn ($a, $b) => ($b['jumlah'] <=> $a['jumlah']) ?: strcmp($a['kode'], $b['kode']));
+
+            $cakupanGejala = [
+                'dipakai' => $dipakai,
+                'total' => count($fieldGejala),
+                'jumlah_aturan' => count($aturan),
+                'teratas' => array_slice($teratas, 0, 5),
+            ];
+        } catch (\Throwable $exception) {
+            $chartError = true;
+            log_message('error', 'Gagal memuat ringkasan grafik dashboard: ' . $exception->getMessage());
+        }
 
         return view('dashboard', [
             'title' => 'Halaman Dashboard',
@@ -167,6 +223,9 @@ class Home extends BaseController
             'users' => $users,
             'diagnosis' => $diagnosis,
             'gejalas' => $gejalas,
+            'chartError' => $chartError,
+            'diagnosaPenyakit' => $diagnosaPenyakit,
+            'cakupanGejala' => $cakupanGejala,
         ]);
     }
 }

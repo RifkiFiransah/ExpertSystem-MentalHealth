@@ -167,16 +167,33 @@
   font-weight: 400;
 }
 
-.app-card .admin-table > thead > tr > th.admin-th-gejala {
-  min-width: 8rem;
+.app-card .admin-table > thead > tr > th.admin-th-rule {
+  min-width: 5rem;
+  font-size: 0.75rem;
+  text-align: center;
   white-space: normal;
 }
 
-.app-card .admin-table > tbody > tr > th.cell-rule {
-  min-width: 7rem;
-  color: #0f172a;
-  font-weight: 600;
+.app-card .admin-table .cell-rule-gejala {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  min-width: 15rem;
+  background: #fff;
   text-align: left;
+}
+
+.app-card .admin-table > thead > tr > th.cell-rule-gejala {
+  z-index: 2;
+  background: #f8fafc;
+}
+
+.app-card .admin-table > tbody > tr:nth-child(even) > .cell-rule-gejala {
+  background: #f8fafc;
+}
+
+.app-card .admin-table > tbody > tr:hover > .cell-rule-gejala {
+  background: #f1f5f9;
 }
 
 .admin-empty {
@@ -364,6 +381,156 @@
   display: inline-flex;
   align-items: center;
   min-height: 2.75rem;
+}
+
+.admin-chart-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 1.25rem;
+}
+
+.admin-chart-desc {
+  margin: 0 0 1rem;
+  color: #5d6778;
+  font-size: 0.8125rem;
+}
+
+.admin-donut {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 11rem;
+  height: 11rem;
+  margin: 0 auto 1rem;
+}
+
+.admin-donut-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.admin-donut-track,
+.admin-donut-value {
+  fill: none;
+  stroke-width: 12;
+}
+
+.admin-donut-track {
+  stroke: #e2e8f0;
+}
+
+.admin-donut-value {
+  stroke: #0f766e;
+}
+
+.admin-donut-label {
+  position: absolute;
+  display: grid;
+  gap: 0.125rem;
+  text-align: center;
+}
+
+.admin-donut-label strong {
+  color: #0f172a;
+  font-size: 1.5rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.admin-donut-label span {
+  color: #5d6778;
+  font-size: 0.75rem;
+}
+
+.admin-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  padding: 0;
+  margin: 0 0 1rem;
+  color: #334155;
+  font-size: 0.75rem;
+  list-style: none;
+}
+
+.admin-legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.admin-legend-swatch {
+  width: 0.75rem;
+  height: 0.75rem;
+  border: 1px solid #64748b;
+  border-radius: 0.125rem;
+}
+
+.admin-legend-swatch-on {
+  background: #0f766e;
+  border-color: #0f766e;
+}
+
+.admin-legend-swatch-off {
+  background: #e2e8f0;
+}
+
+.admin-chart-subtitle {
+  margin: 0 0 0.75rem;
+  color: #0f172a;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.admin-bars {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.admin-bar-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.25rem;
+  color: #334155;
+  font-size: 0.75rem;
+}
+
+.admin-bar-head > span:last-child {
+  color: #5d6778;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.admin-bar-track {
+  height: 0.5rem;
+  overflow: hidden;
+  background: #e2e8f0;
+  border-radius: 0.125rem;
+}
+
+.admin-bar-fill {
+  display: block;
+  height: 100%;
+  background: #0f766e;
+}
+
+.admin-empty-chart {
+  margin: 0;
+  padding: 1.5rem 0;
+  color: #5d6778;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+@media (max-width: 767.98px) {
+  .admin-chart-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 575.98px) {

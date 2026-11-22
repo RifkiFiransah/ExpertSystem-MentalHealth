@@ -6,12 +6,13 @@ foreach ($gejalas as $gejala) {
   $gejalaMap[$gejala['kode_gejala']] = $gejala['nama_gejala'];
 }
 $kodeList = array_map(static fn ($column) => $column['Field'], $columns);
+$aturan = array_values($rules);
 ?>
 <div class="container-xl">
   <div class="admin-page-head">
     <div>
       <h2 class="app-page-title"><?= esc($title); ?></h2>
-      <p class="admin-page-desc">Setiap baris aturan berisi nilai gejala. Nilai Iya berarti gejala menjadi indikator pada aturan tersebut.</p>
+      <p class="admin-page-desc">Baris menampilkan gejala, kolom menampilkan aturan. Nilai Iya berarti gejala menjadi indikator pada aturan tersebut.</p>
     </div>
     <div class="admin-page-actions">
       <button type="button" class="btn app-btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Tambah aturan</button>
@@ -28,29 +29,37 @@ $kodeList = array_map(static fn ($column) => $column['Field'], $columns);
   <div class="app-card admin-card">
     <div class="app-card-header admin-card-header">
       <h3 class="admin-card-title">Matriks aturan diagnosa</h3>
-      <span class="admin-card-meta"><?= count($rules); ?> aturan, <?= count($kodeList); ?> gejala</span>
+      <span class="admin-card-meta"><?= count($aturan); ?> aturan, <?= count($kodeList); ?> gejala</span>
     </div>
     <div class="app-card-body p-0">
       <p id="rule-loading" class="admin-status px-3 pt-3" role="status">Memuat aturan diagnosa...</p>
       <div class="table-responsive">
-        <table class="table admin-table">
+        <table class="table admin-table admin-matrix">
           <thead>
             <tr>
-              <th scope="col">Aturan</th>
-              <?php foreach ($kodeList as $kode) : ?>
-                <th scope="col" class="admin-th-gejala">
-                  <span class="admin-code"><?= esc($kode); ?></span>
-                  <span class="admin-th-name"><?= esc($gejalaMap[$kode] ?? 'Gejala tidak ditemukan'); ?></span>
-                </th>
+              <th scope="col" class="cell-rule-gejala">Gejala</th>
+              <?php foreach ($aturan as $ruleIndex => $rule) : ?>
+                <th scope="col" class="admin-th-rule">Aturan <?= $ruleIndex + 1; ?></th>
               <?php endforeach; ?>
             </tr>
           </thead>
           <tbody>
-            <?php if (!empty($rules) && !empty($kodeList)) : ?>
-              <?php foreach ($rules as $ruleIndex => $rule) : ?>
+            <?php if (empty($aturan)) : ?>
+              <tr>
+                <td class="admin-empty">Belum ada aturan diagnosa. Tambah aturan untuk mengisi matriks.</td>
+              </tr>
+            <?php elseif (empty($kodeList)) : ?>
+              <tr>
+                <td class="admin-empty" colspan="<?= count($aturan) + 1; ?>">Belum ada kolom gejala pada tabel aturan.</td>
+              </tr>
+            <?php else : ?>
+              <?php foreach ($kodeList as $kode) : ?>
                 <tr>
-                  <th scope="row" class="cell-rule">Aturan <?= $ruleIndex + 1; ?></th>
-                  <?php foreach ($kodeList as $kode) : ?>
+                  <th scope="row" class="cell-rule-gejala">
+                    <span class="admin-code"><?= esc($kode); ?></span>
+                    <span class="admin-th-name"><?= esc($gejalaMap[$kode] ?? 'Gejala tidak ditemukan'); ?></span>
+                  </th>
+                  <?php foreach ($aturan as $rule) : ?>
                     <?php $nilai = isset($rule[$kode]) ? (int) $rule[$kode] : null; ?>
                     <td>
                       <?php if ($nilai === 1) : ?>
@@ -64,10 +73,6 @@ $kodeList = array_map(static fn ($column) => $column['Field'], $columns);
                   <?php endforeach; ?>
                 </tr>
               <?php endforeach; ?>
-            <?php else : ?>
-              <tr>
-                <td class="admin-empty" colspan="<?= count($kodeList) + 1; ?>">Belum ada aturan diagnosa.</td>
-              </tr>
             <?php endif; ?>
           </tbody>
         </table>
