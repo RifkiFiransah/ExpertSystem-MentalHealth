@@ -1,68 +1,144 @@
-# CodeIgniter 4 Application Starter
+# MentalCare — Sistem Ahli Skrining Kesehatan Mental
 
-## What is CodeIgniter?
+MentalCare adalah aplikasi web untuk membantu pengguna mengenali kemungkinan gangguan kesehatan mental dari gejala yang mereka pilih. Sistem ini bekerja berbasis aturan (rule-based expert system): gejala yang dipilih diuji terhadap basis pengetahuan, lalu menghasilkan persentase kecocokan per kondisi.
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](https://codeigniter.com).
+> **Penting:** Hasil skrining adalah kemungkinan berdasarkan gejala, **bukan diagnosis medis**. Sistem ini tidak menggantikan pemeriksaan dokter. Bila membutuhkan bantuan langsung, hubungi tenaga kesehatan.
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+Arah visual dan keputusan desain tercatat di [`DESIGN.md`](DESIGN.md) (tema tenang-klinis).
 
-More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
+## Fitur
 
-You can read the [user guide](https://codeigniter.com/user_guide/)
-corresponding to the latest version of the framework.
+**Pengguna (publik)**
 
-## Installation & updates
+- Beranda dengan ringkasan kondisi dan alur skrining
+- Daftar kondisi (`/data-penyakit`) dengan pencarian dan detail
+- Diagnosa gejala → hasil persentase kecocokan
+- Riwayat diagnosa
+- Profil pengguna
+- Registrasi dan masuk
 
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
+**Admin**
 
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
+- Dashboard
+- Kelola data penyakit (CRUD)
+- Kelola data gejala (CRUD)
+- Kelola basis aturan diagnosa (`tbl_rule`)
+- Kelola pengguna
+- Data hasil diagnosa seluruh pengguna
 
-## Setup
+## Cara Kerja Diagnosa
 
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
+1. Pengguna memilih gejala yang dialami.
+2. Sistem membaca basis aturan dari tabel `tbl_rule` — setiap baris adalah satu kondisi, setiap kolom gejala (`G001`, `G002`, …) bernilai `1` (relevan) atau `0`.
+3. Gejala terpilih dicocokkan dengan aturan tiap kondisi. Persentase dihitung sebagai:
 
-## Important Change with index.php
+   ```
+   persentase = (jumlah gejala cocok / jumlah gejala pada aturan kondisi) × 100
+   ```
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+4. Kondisi dengan persentase **≥ 45%** masuk kandidat, lalu diurutkan dari yang tertinggi.
+5. Kandidat teratas ditampilkan sebagai hasil skrining, beserta daftar ranking lainnya. Hasil tersimpan ke riwayat.
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+Basis aturan dapat diperbarui admin melalui halaman **Rule** tanpa mengubah kode.
 
-**Please** read the user guide for a better explanation of how CI4 works!
+## Tech Stack
 
-## Repository Management
+| Komponen | Teknologi |
+| --- | --- |
+| Framework | CodeIgniter 4 (`^4.7.6`) |
+| Bahasa | PHP `^8.3` |
+| Database | MySQL / MariaDB (driver `MySQLi`) |
+| Testing | PHPUnit `^11.5` |
+| Server | Apache/Nginx, atau `php spark serve` |
 
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
+## Persyaratan
 
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
+- PHP ≥ 8.3 dengan ekstensi: `intl`, `mbstring`, `json`, `mysqlnd`
+- [Composer](https://getcomposer.org)
+- MySQL atau MariaDB
+- Node.js tidak wajib (aset frontend sudah berupa statis di `public/assets`)
 
-## Server Requirements
+## Instalasi
 
-PHP version 8.3 or higher is required, with the following extensions installed:
+```bash
+# 1. Salin environment lalu sesuaikan
+cp env .env
+# Edit .env: app.baseURL, database.default.* (hostname, database, username, password)
 
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
+# 2. Install dependensi
+composer install
 
-> [!WARNING]
-> The end of life date for PHP 7.4 was November 28, 2022.
-> The end of life date for PHP 8.0 was November 26, 2023.
-> If you are still using PHP 7.4 or 8.0, you should upgrade immediately.
-> The end of life date for PHP 8.1 will be November 25, 2024.
+# 3. Buat database, lalu migrasi & seed
+#    Buat database mis. "ci4_mentalhealth" di MySQL, sesuaikan .env
+php spark migrate
+php spark db:seed PenyakitSeeder
+php spark db:seed GejalaSeeder
+php spark db:seed RuleSeeder
+php spark db:seed UserSeeder
+php spark db:seed AdminSeeder
+php spark db:seed DiagnosaSeeder   # opsional: data contoh hasil diagnosa
 
-Additionally, make sure that the following extensions are enabled in your PHP:
+# 4. Jalankan server pengembangan
+php spark serve
+```
 
-- json (enabled by default - don't turn it off)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+Buka `http://localhost:8080/` (atau `app.baseURL` di `.env`).
+
+> **Web server produksi:** arahkan document root ke folder `public/`, bukan root proyek.
+
+### Akun default
+
+| Role | Email | Password |
+| --- | --- | --- |
+| Admin | `admin@gmail.com` | `admin123` |
+
+Akun admin dibuat oleh `AdminSeeder`. **Ganti password ini sebelum deploy ke produksi.**
+
+## Struktur Proyek
+
+```
+app/
+├── Controllers/     # Home, Auth, Diagnosa, Penyakit, Gejala, Rule, User, Profile
+├── Models/          # PenyakitModel, GejalaModel, RuleModel, DiagnosaModel, dll.
+├── Views/           # frontend (publik), layouts + dashboard (admin)
+├── Database/
+│   ├── Migrations/  # skema tabel
+│   └── Seeds/       # data awal (penyakit, gejala, rule, admin, …)
+├── Filters/         # filter autentikasi (auth)
+└── Config/          # Routes, Autoload, Database, dll.
+public/              # document root: aset, index.php
+tests/               # PHPUnit
+writable/            # log, cache, session
+DESIGN.md            # arah desain produk
+```
+
+### Tabel utama
+
+| Tabel | Peran |
+| --- | --- |
+| `tbl_penyakit` | Kondisi / gangguan kesehatan mental |
+| `tbl_gejala` | Daftar gejala (kode G001, G002, …) |
+| `tbl_rule` | Basis aturan: gejala relevan per kondisi |
+| `tbl_user` | Pengguna terdaftar |
+| `tbl_admin` | Akun admin |
+| `tbl_diagnosa` | Riwayat hasil skrining pengguna |
+
+## Menjalankan Test
+
+```bash
+composer test
+# atau
+vendor/bin/phpunit
+```
+
+Konfigurasi test ada di `phpunit.xml.dist`.
+
+## Batasan Produk
+
+- Output adalah **kemungkinan** berdasarkan gejala yang dipilih, bukan diagnosis medis.
+- Tidak menyediakan konsultasi, terapi, atau penanganan darurat.
+- Pengguna dalam krisis atau membutuhkan bantuan langsung diarahkan ke tenaga kesehatan.
+
+## Lisensi
+
+MIT — lihat [`LICENSE`](LICENSE).
